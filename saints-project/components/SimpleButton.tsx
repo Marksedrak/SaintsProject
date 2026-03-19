@@ -36,7 +36,7 @@ export function SimpleButton({
   return (
     <Pressable onPress={onPress}>
       <View style={ContainerStyle ?? styles.defaultContainer}>
-        <Text style={TextStyle ?? styles.defaultText}>{title}</Text>
+        <Text style={TextStyle ?? styles.defultText}>{title}</Text>
       </View>
     </Pressable>
   );
