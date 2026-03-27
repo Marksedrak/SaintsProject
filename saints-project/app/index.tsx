@@ -1,6 +1,13 @@
 import { SimpleButton } from "@/components/SimpleButton";
-import React, { useState, useRef } from "react";
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useRef, useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 export default function Index() {
   const [username, setUsername] = useState("");
@@ -9,7 +16,13 @@ export default function Index() {
   const disbaled = !username || !password;
 
   function handleLogin() {
-    return !disbaled ? () => alert(`${username}, ${password}`) : () => {};
+    let message = "";
+    if (disbaled) {
+      return;
+    } else {
+      message = `${username}, ${password}`;
+    }
+    alert(message);
   }
 
   return (
@@ -18,10 +31,13 @@ export default function Index() {
       <Text style={styles.text}>
         Pardon the emptiness, we&apos;re still building stuff out!
       </Text>
-      <KeyboardAvoidingView 
+      {/* Login Form */}
+      <KeyboardAvoidingView
         style={styles.formBox}
         behavior={Platform.OS === "ios" ? "position" : "height"}
-        keyboardVerticalOffset={50}>
+        keyboardVerticalOffset={50}
+      >
+        {/* Username Input */}
         <TextInput
           placeholder="Username"
           value={username}
@@ -31,7 +47,7 @@ export default function Index() {
           returnKeyType="next"
           onSubmitEditing={() => Pass.current?.focus()}
         />
-
+        {/* Password Input */}
         <TextInput
           ref={Pass}
           placeholder="Password"
@@ -40,12 +56,17 @@ export default function Index() {
           secureTextEntry={true}
           style={styles.textInput}
           clearTextOnFocus={true}
-          onSubmitEditing={handleLogin()}
+          onSubmitEditing={handleLogin}
         />
+        {/* Form Submit Button */}
         <SimpleButton
           title="Login"
-          onPress={handleLogin()}
-          ContainerStyle={disbaled ? styles.loginButtonContainerDisabled : styles.loginButtonContainer}
+          onPress={handleLogin}
+          ContainerStyle={
+            disbaled
+              ? styles.loginButtonContainerDisabled
+              : styles.loginButtonContainer
+          }
           TextStyle={
             disbaled ? styles.loginButtonDisabled : styles.loginButtonText
           }
@@ -71,13 +92,13 @@ const styles = StyleSheet.create({
     fontFamily: "Times New Roman",
     margin: 20,
   },
-  header1:{
-    color: 'Grey',
+  header1: {
+    color: "Grey",
     fontSize: 22,
-    textAlign: 'center',
-    fontFamily: 'Arial',
-    fontWeight: 'bold',
-    backgroundColor: '#9854ba',
+    textAlign: "center",
+    fontFamily: "Arial",
+    fontWeight: "bold",
+    backgroundColor: "#9854ba",
     padding: 10,
     borderRadius: 15,
     marginTop: 20,
