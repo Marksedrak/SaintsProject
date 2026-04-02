@@ -13,22 +13,37 @@ export default function Index() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const Pass = useRef<TextInput>(null);
-  const disbaled = !username || !password;
+  const disabled = !username || !password;
 
-  function handleLogin() {
-    let message = "";
-    if (disbaled) {
+  async function handleLogin() {
+    if (disabled) {
       return;
     } else {
-      message = `${username}, ${password}`;
+      //message = `${username}, ${password}`;
+      try {
+        const response = await fetch("http://localhost:3000/api/data", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const message = await response.json();
+        alert(message.text);
+      } catch (error) {
+        alert("An error occurred while trying to log in.");
+        console.error("Login error:", error);
+      }
     }
-    alert(message);
   }
 
   return (
     <View style={styles.container}>
+      {/* Welcome Text */}
       <Text style={styles.header1}>Welcome to the App!</Text>
       <Text style={styles.text}>
+        {/* Subtitle Text (Optional) */}
         Pardon the emptiness, we&apos;re still building stuff out!
       </Text>
       {/* Login Form */}
@@ -63,12 +78,12 @@ export default function Index() {
           title="Login"
           onPress={handleLogin}
           ContainerStyle={
-            disbaled
+            disabled
               ? styles.loginButtonContainerDisabled
               : styles.loginButtonContainer
           }
           TextStyle={
-            disbaled ? styles.loginButtonDisabled : styles.loginButtonText
+            disabled ? styles.loginButtonDisabled : styles.loginButtonText
           }
         />
       </KeyboardAvoidingView>
