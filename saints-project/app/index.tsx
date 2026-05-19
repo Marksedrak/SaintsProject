@@ -1,11 +1,13 @@
 import { SimpleButton } from "@/components/SimpleButton";
 import React, { useEffect, useRef, useState } from "react";
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
   Text,
   TextInput,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 
@@ -14,6 +16,7 @@ const DEV_IP = "10.15.46.95";
 export default function Index() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<string | null>(null);
   const Pass = useRef<TextInput>(null);
   const disabled = !username || !password;
@@ -29,6 +32,8 @@ export default function Index() {
       return;
     } else {
       try {
+        // Change button style
+        setIsLoading(true);
         // TODO: Replace with actual endpoint URL when ready
         const response = await fetch(`http://${DEV_IP}:3000/api/data`, {
           method: "POST",
@@ -47,62 +52,77 @@ export default function Index() {
       } catch (error) {
         alert("An error occurred while trying to log in.");
         console.error("Login error:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
   }
 
+  async function SignUp() {
+    alert("Signing up");
+  }
+
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "position" : "height"}
-      keyboardVerticalOffset={-100}
-    >
-      {/* Welcome Text */}
-      <Text style={styles.header1}>Welcome to the App!</Text>
-      <Text style={styles.text}>
-        {/* Subtitle Text (Optional) */}
-        Pardon the emptiness, we&apos;re still building stuff out!
-      </Text>
-      {/* Login Form */}
-      <View style={styles.formBox}>
-        {/* Username Input */}
-        <TextInput
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-          style={styles.textInput}
-          returnKeyType="next"
-          clearButtonMode={"while-editing"}
-          onSubmitEditing={() => Pass.current?.focus()}
-          enterKeyHint="next"
-        />
-        {/* Password Input */}
-        <TextInput
-          ref={Pass}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={true}
-          style={styles.textInput}
-          clearButtonMode={"while-editing"}
-          onSubmitEditing={handleLogin}
-          enterKeyHint="done"
-        />
-        {/* Form Submit Button */}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "position" : "height"}
+        keyboardVerticalOffset={-100}
+      >
+        {/*******************  Welcome Text *********************/}
+        <Text style={styles.header1}>Welcome to the App!</Text>
+        <Text style={styles.text}>
+          {/* Subtitle Text (Optional) */}
+          Pardon the emptiness, we&apos;re still building stuff out!
+        </Text>
+        {/******************* Login Form ***********************/}
+        <View style={styles.formBox}>
+          {/*****************  Username Input ******************/}
+          <TextInput
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
+            style={styles.textInput}
+            returnKeyType="next"
+            clearButtonMode={"while-editing"}
+            onSubmitEditing={() => Pass.current?.focus()}
+            enterKeyHint="next"
+          />
+          {/*****************  Password Input ******************/}
+          <TextInput
+            ref={Pass}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={true}
+            style={styles.textInput}
+            clearButtonMode={"while-editing"}
+            onSubmitEditing={handleLogin}
+            enterKeyHint="done"
+          />
+          {/***************** Form Submit Button ****************/}
+          <SimpleButton
+            title="Login"
+            onPress={handleLogin}
+            ContainerStyle={
+              disabled || isLoading
+                ? styles.loginButtonContainerDisabled
+                : styles.loginButtonContainer
+            }
+            TextStyle={
+              disabled ? styles.loginButtonDisabled : styles.loginButtonText
+            }
+          />
+        </View>
+        {/******************* Sign Up Button *********************/}
         <SimpleButton
-          title="Login"
-          onPress={handleLogin}
-          ContainerStyle={
-            disabled
-              ? styles.loginButtonContainerDisabled
-              : styles.loginButtonContainer
-          }
-          TextStyle={
-            disabled ? styles.loginButtonDisabled : styles.loginButtonText
-          }
+          title="Sign Up"
+          onPress={SignUp}
+          ContainerStyle={styles.signupButton}
+          TextStyle={styles.signupButtonText}
         />
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -166,6 +186,34 @@ const styles = StyleSheet.create({
   },
   loginButtonDisabled: {
     color: "#9f9999",
+    fontSize: 18,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  signupButton: {
+    backgroundColor: "#19b826",
+    borderRadius: 10,
+    padding: 10,
+    width: "80%",
+    alignSelf: "center",
+    color: "black",
+  },
+  signupButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  signupButtonHover: {
+    backgroundColor: "#4f6c51",
+    borderRadius: 10,
+    padding: 10,
+    width: "80%",
+    alignSelf: "center",
+    color: "white",
+  },
+  signupButtonHoverText: {
+    color: "#1f1e1e",
     fontSize: 18,
     textAlign: "center",
     fontWeight: "bold",

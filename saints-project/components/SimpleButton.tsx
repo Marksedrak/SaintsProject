@@ -1,14 +1,15 @@
 import {
-    Pressable,
-    StyleSheet,
-    Text,
-    TextStyle,
-    View,
-    ViewStyle,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
 } from "react-native";
 
 export interface SimpleButtonProps {
-  onPress: () => void;
+  onPress?: () => void;
+  onPressed?: () => void;
   title: string;
   ContainerStyle?: ViewStyle;
   TextStyle?: TextStyle;
@@ -29,12 +30,13 @@ const styles = StyleSheet.create({
 
 export function SimpleButton({
   onPress,
+  onPressed,
   title,
   ContainerStyle,
   TextStyle,
 }: SimpleButtonProps) {
   return (
-    <Pressable onPress={onPress}>
+    <Pressable onPress={onPress} onPressOut={onPressed}>
       <View style={ContainerStyle ?? styles.defaultContainer}>
         <Text style={TextStyle ?? styles.defultText}>{title}</Text>
       </View>
