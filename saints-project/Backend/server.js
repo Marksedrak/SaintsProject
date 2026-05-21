@@ -30,21 +30,35 @@ app.post("/api/data", async (req, res) => {
   // Handle Login attempt
   const { username, password } = req.body;
   console.log(`${username}, ${password}`);
+
   // Validate username and password
+  if (!username || !password) {
+    return res.status(400).json({
+      text: "Invalid Username or Password",
+      errors: { username: !username, password: !password },
+    });
+  }
+
+  const existingUser = db
+    .prepare("SELECT * From users WHERE username = ?")
+    .get(username);
+
+  if (existingUser) {
+    // User Already exists, return error
+    return res.status(409).json({
+      text: "Username already exists",
+      errors: { username: true },
+    });
+  }
 
   // Send response back to frontend
   db.prepare(`INSERT INTO users (username, password) VALUES (?, ?)`).run(
     username,
     password,
   );
-
-  db.prepare(`SELECT * FROM users`)
-    .all()
-    .forEach((row) => {
-      console.log(row);
-    });
-  res.status(200).json({
+  res.status(201).json({
     text: `Username: ${username}\nPassword: ${password}`,
+    errors: {},
   });
 });
 

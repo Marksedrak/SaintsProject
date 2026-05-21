@@ -1,4 +1,5 @@
 import { SimpleButton } from "@/components/SimpleButton";
+import Constants from "expo-constants";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Keyboard,
@@ -11,7 +12,7 @@ import {
   View,
 } from "react-native";
 
-const DEV_IP = "10.15.46.95";
+const DEV_IP = Constants.expoConfig?.hostUri?.split(":")[0];
 
 export default function Index() {
   const [username, setUsername] = useState("");
@@ -47,11 +48,9 @@ export default function Index() {
         });
 
         const message = await response.json();
-        setErrors(message.errors);
         alert(message.text);
-      } catch (error) {
-        alert("An error occurred while trying to log in.");
-        console.error("Login error:", error);
+      } catch (e) {
+        alert(e);
       } finally {
         setIsLoading(false);
       }
