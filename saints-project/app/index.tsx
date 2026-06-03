@@ -25,6 +25,7 @@ export default function Index() {
   const ShowErrors = useEffect(() => {
     if (errors) {
       alert(errors);
+      setErrors("");
     }
   }, [errors]);
 
